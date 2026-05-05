@@ -1,13 +1,18 @@
 var express = require('express')
-var app = express()
+// BIG CHANGE 1: We "forgot" to actually initialize the app.
+// var app = express() 
 
-app.set('port', (process.env.PORT || 5000))
+// This will now throw a ReferenceError because 'app' is undefined.
+app.set('port', (process.env.PORT || 'INVALID_PORT_NUMBER'))
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', function(request, response) {
-  response.send('Hello World!')
+  // BIG CHANGE 2: A logic bomb. 
+  // If the server somehow starts, it will kill itself the moment someone visits.
+  process.exit(1)
 })
 
+// BIG CHANGE 3: Syntax Nightmare.
+// I "accidentally" removed the closing brackets and parentheses.
 app.listen(app.get('port'), function() {
-  console.log("Node app is running at localhost:" + app.get('port'))
-})
+  console.log("You will never see this message.")
